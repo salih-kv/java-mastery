@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 80%;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 5px 0;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Library Management System</h1>
+
+    <!-- Add Book Section -->
+    <div class="form-group">
+        <h2>Add Book</h2>
+        <label for="bookTitle">Book Title</label>
+        <input type="text" id="bookTitle">
+        <label for="bookAuthor">Author</label>
+        <input type="text" id="bookAuthor">
+        <button class="button" onclick="addBook()">Add Book</button>
+    </div>
+
+    <!-- Register User Section -->
+    <div class="form-group">
+        <h2>Register User</h2>
+        <label for="userName">User Name</label>
+        <input type="text" id="userName">
+        <label for="userId">User ID</label>
+        <input type="number" id="userId">
+        <button class="button" onclick="registerUser()">Register User</button>
+    </div>
+
+    <!-- Borrow Book Section -->
+    <div class="form-group">
+        <h2>Borrow Book</h2>
+        <label for="borrowTitle">Book Title</label>
+        <input type="text" id="borrowTitle">
+        <label for="borrowUserId">User ID</label>
+        <input type="number" id="borrowUserId">
+        <button class="button" onclick="borrowBook()">Borrow Book</button>
+    </div>
+
+    <!-- Return Book Section -->
+    <div class="form-group">
+        <h2>Return Book</h2>
+        <label for="returnTitle">Book Title</label>
+        <input type="text" id="returnTitle">
+        <button class="button" onclick="returnBook()">Return Book</button>
+    </div>
+
+    <!-- Output Section -->
+    <div id="output">
+        <h2>Output</h2>
+        <div id="outputMessage"></div>
+    </div>
+</div>
+
+<script>
+    // Simulated library data
+    const books = [];
+    const users = [];
+
+    function addBook() {
+        const title = document.getElementById('bookTitle').value;
+        const author = document.getElementById('bookAuthor').value;
+        
+        if (title && author) {
+            books.push({ title, author, isAvailable: true });
+            displayMessage(`Book '${title}' by ${author} added successfully.`);
+        } else {
+            displayMessage('Please enter both title and author.');
+        }
+    }
+
+    function registerUser() {
+        const name = document.getElementById('userName').value;
+        const userId = parseInt(document.getElementById('userId').value);
+        
+        if (name && userId) {
+            users.push({ name, userId });
+            displayMessage(`User '${name}' registered successfully.`);
+        } else {
+            displayMessage('Please enter both name and user ID.');
+        }
+    }
+
+    function borrowBook() {
+        const title = document.getElementById('borrowTitle').value;
+        const userId = parseInt(document.getElementById('borrowUserId').value);
+
+        const book = books.find(book => book.title === title);
+        const user = users.find(user => user.userId === userId);
+
+        if (!book) {
+            displayMessage("Book not found.");
+            return;
+        }
+
+        if (!user) {
+            displayMessage("User not found.");
+            return;
+        }
+
+        if (!book.isAvailable) {
+            displayMessage("Book is currently unavailable.");
+            return;
+        }
+
+        book.isAvailable = false;
+        displayMessage(`Book '${title}' borrowed by user '${user.name}'.`);
+    }
+
+    function returnBook() {
+        const title = document.getElementById('returnTitle').value;
+        const book = books.find(book => book.title === title);
+
+        if (!book) {
+            displayMessage("Book not found.");
+            return;
+        }
+
+        if (book.isAvailable) {
+            displayMessage("Book is already available in the library.");
+            return;
+        }
+
+        book.isAvailable = true;
+        displayMessage(`Book '${title}' returned successfully.`);
+    }
+
+    function displayMessage(message) {
+        document.getElementById('outputMessage').innerText = message;
+    }
+</script>
+
+</body>
+</html>
